@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/Foreground-Service-Demo-Android-App" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/RSShool2021-Android-task-Pomodoro" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Simple-Custom-View_Android-Demo-App" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Simple-RecyclerView-Android-Demo-app-Stopwatch" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/cc/rsschool2021-Android-task-quiz" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/cc/rsschool2021-Android-task-randomizer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/rs.android-2021-stage1-task1" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/rs.android-2021-stage1-task2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/rs.android-2021-stage1-task3" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/rsschool2021-Android-task-quiz" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/rsschool2021-Android-task-randomizer" vcs="Git" />
+  </component>
+</project>
