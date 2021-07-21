@@ -17,8 +17,14 @@ class TimerViewHolder(
     private var timerJob: Job? = null
     private var circleJob: Job? = null
 
+    private var current = 0L
+
     fun bind(timer: Timer) {
         binding.timerText.text = timer.currentTime.displayTime()
+
+        if (timer.currentSecond == 0L) {
+            binding.customView.setCurrent(0L)
+        }
 
         if (timer.isStarted) {
             startTimer(timer)
@@ -27,8 +33,10 @@ class TimerViewHolder(
         }
 
         if (timer.isFinished) {
+            binding.startPauseButton.isEnabled = false
             binding.timerLayout.setBackgroundColor(resources.getColor(R.color.purple_200, null))
         } else {
+            binding.startPauseButton.isEnabled = true
             binding.timerLayout.setBackgroundColor(resources.getColor(R.color.transparent, null))
         }
 
@@ -38,7 +46,6 @@ class TimerViewHolder(
     private fun initButtonsListeners(timer: Timer) {
         binding.startPauseButton.setOnClickListener {
             if (timer.isStarted) {
-                timer.stopTime = timer.currentTime
                 listener.stop(timer.id, timer.currentTime)
             } else {
                 listener.start(timer.id, adapterPosition)
@@ -53,6 +60,7 @@ class TimerViewHolder(
         binding.timerLayout.setBackgroundColor(resources.getColor(R.color.transparent, null))
 
         binding.startPauseButton.text = "stop"
+        binding.customView.setPeriod(timer.fullTime)
 
         val startTime = System.currentTimeMillis()
 
@@ -60,44 +68,40 @@ class TimerViewHolder(
             while (true) {
                 timer.currentTime = timer.stopTime - System.currentTimeMillis() + startTime
                 binding.timerText.text = (timer.currentTime).displayTime()
-                delay(INTERVAL)
 
-                // may restart time faster than time over
+                timer.currentSecond += INTERVAL
+                binding.customView.setCurrent(timer.currentSecond)
+
                 if (binding.timerText.text.toString() == ZERO_TIME) {
                     Log.e("AAA", "timerText.text ${binding.timerText.text}")
-                    binding.timerText.text = timer.fullTime.displayTime()
                     binding.timerLayout.setBackgroundColor(
                         resources.getColor(
                             R.color.purple_200,
                             null
                         )
                     )
+
+                    binding.customView.setCurrent(timer.fullTime - 1L)
+
                     timer.isFinished = true
-                    listener.stop(timer.id, timer.fullTime)
+                    listener.stop(timer.id, 0L)
                     timerJob?.cancel()
                     return@launch
                 }
+                delay(INTERVAL)
             }
         }
 
         binding.blinkingIndicator.isInvisible = false
         (binding.blinkingIndicator.background as? AnimationDrawable)?.start()
-
-//        binding.customView.setPeriod(timer.time)
-//
-//        circleJob = GlobalScope.launch(Dispatchers.Main) {
-//            while (current < stopwatch.time) {
-//                Log.e("AAA", "${stopwatch.time} stopwatch.time")
-//                current += UNIT_TEN_MS
-//                Log.e("AAA", "$current current")
-//                binding.customViewTwo.setCurrent(current)
-//                delay(UNIT_TEN_MS)
-//            }
-//        }
     }
 
     private fun stopTimer(timer: Timer) {
         binding.startPauseButton.text = "start"
+
+        if (timer.currentSecond > 0) {
+            timer.currentSecond -= 1000L
+        }
 
         timerJob?.cancel()
         circleJob?.cancel()
@@ -114,9 +118,8 @@ class TimerViewHolder(
         val h = this / 1000 / 3600
         val m = this / 1000 % 3600 / 60
         val s = this / 1000 % 60
-        val ms = this % 1000 / 10
 
-        return "${displaySlot(h)}:${displaySlot(m)}:${displaySlot(s)}:${displaySlot(ms)}"
+        return "${displaySlot(h)}:${displaySlot(m)}:${displaySlot(s)}"
     }
 
     private fun displaySlot(count: Long): String {
@@ -129,9 +132,7 @@ class TimerViewHolder(
 
     private companion object {
 
-        private const val ZERO_TIME = "00:00:00:00"
-        private const val INTERVAL = 10L
-        private const val UNIT_TEN_MS = 10L
-        private const val PERIOD = 1000L * 60L * 60L * 24L // Day
+        private const val ZERO_TIME = "00:00:00"
+        private const val INTERVAL = 1000L
     }
 }

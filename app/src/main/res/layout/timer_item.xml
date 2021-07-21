@@ -54,7 +54,7 @@
             android:layout_marginStart="16dp"
             app:custom_color="@color/purple_700"
             app:custom_style="fill"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/timer_text"
             app:layout_constraintTop_toTopOf="parent" />

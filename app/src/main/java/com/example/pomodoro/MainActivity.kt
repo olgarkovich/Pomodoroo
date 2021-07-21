@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), TimerListener {
         binding.addNewTimerButton.setOnClickListener {
             if (binding.enterTimerMinutes.text.isNotEmpty()) {
                 val ms = binding.enterTimerMinutes.text.toString().toInt() * 1000L
-                timers.add(Timer(nextId++, ms, ms, ms, false, false))
+                timers.add(Timer(nextId++, ms, ms, 0L, ms, false, false))
                 timerAdapter.submitList(timers.toList())
             } else {
                 Toast.makeText(this, "Input minutes count", Toast.LENGTH_SHORT).show()
@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity(), TimerListener {
     override fun start(id: Int, position: Int) {
         changeStopwatch(id, timers[position].stopTime, true)
 
-        // Need to check
         // Stop previous timer
         if (currentTimerId >= 0 && timers.size > 1 && currentTimerId != position) {
             timers[currentTimerId].stopTime = timers[currentTimerId].currentTime
@@ -51,6 +50,8 @@ class MainActivity : AppCompatActivity(), TimerListener {
     }
 
     override fun stop(id: Int, currentTime: Long) {
+        // java.lang.ArrayIndexOutOfBoundsException: length=10; index=-1
+        timers[currentTimerId].stopTime = currentTime
         changeStopwatch(id, currentTime, false)
     }
 
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity(), TimerListener {
         val newTimers = mutableListOf<Timer>()
         timers.forEach {
             if (it.id == id) {
-                newTimers.add(Timer(it.id, it.fullTime, currentTime ?: it.currentTime, it.stopTime, isStarted, it.isFinished))
+                newTimers.add(Timer(it.id, it.fullTime, currentTime ?: it.currentTime, it.currentSecond, it.stopTime, isStarted, it.isFinished))
             } else {
                 newTimers.add(it)
             }
@@ -76,7 +77,6 @@ class MainActivity : AppCompatActivity(), TimerListener {
 
     private fun checkCurrentTimer(id: Int) {
 
-        // Need to check
         //Make less currentTimerId because delete item which before it in list
         if (id <= currentTimerId) {
             currentTimerId--
