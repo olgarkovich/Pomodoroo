@@ -68,12 +68,12 @@ class TimerViewHolder(
             while (true) {
                 timer.currentTime = timer.stopTime - System.currentTimeMillis() + startTime
                 binding.timerText.text = (timer.currentTime).displayTime()
+                listener.saveState(timer.id, adapterPosition, timer.currentTime)
 
                 timer.currentSecond += INTERVAL
                 binding.customView.setCurrent(timer.currentSecond)
 
                 if (binding.timerText.text.toString() == ZERO_TIME) {
-                    Log.e("AAA", "timerText.text ${binding.timerText.text}")
                     binding.timerLayout.setBackgroundColor(
                         resources.getColor(
                             R.color.purple_200,

@@ -7,4 +7,6 @@ interface TimerListener {
     fun stop(id: Int, currentTime: Long)
 
     fun delete(id: Int, position: Int)
+
+    fun saveState(id: Int, position: Int, currentTime: Long)
 }
