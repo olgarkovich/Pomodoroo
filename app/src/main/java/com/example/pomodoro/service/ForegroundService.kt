@@ -30,7 +30,7 @@ class ForegroundService : Service() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(getPendingIntent())
             .setSilent(true)
-            .setSmallIcon(R.drawable.blinking_circle)
+            .setSmallIcon(R.drawable.ic_timer)
     }
 
     override fun onCreate() {

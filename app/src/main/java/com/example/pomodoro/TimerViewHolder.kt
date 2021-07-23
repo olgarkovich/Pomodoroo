@@ -21,6 +21,7 @@ class TimerViewHolder(
 
     fun bind(timer: Timer) {
         binding.timerText.text = timer.currentTime.displayTime()
+        Log.e("III", "24 . currentTime ${timer.currentTime}")
 
         if (timer.currentSecond == 0L) {
             binding.customView.setCurrent(0L)
@@ -46,6 +47,7 @@ class TimerViewHolder(
     private fun initButtonsListeners(timer: Timer) {
         binding.startPauseButton.setOnClickListener {
             if (timer.isStarted) {
+                Log.e("III", "50 . currentTime ${timer.currentTime}")
                 listener.stop(timer.id, timer.currentTime)
             } else {
                 listener.start(timer.id, adapterPosition)
@@ -67,6 +69,7 @@ class TimerViewHolder(
         timerJob = GlobalScope.launch(Dispatchers.Main) {
             while (true) {
                 timer.currentTime = timer.stopTime - System.currentTimeMillis() + startTime
+                Log.e("III", "72 . currentTime ${timer.currentTime}")
                 binding.timerText.text = (timer.currentTime).displayTime()
                 listener.saveState(timer.id, adapterPosition, timer.currentTime)
 

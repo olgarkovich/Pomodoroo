@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity(), TimerListener, LifecycleObserver {
             if (binding.enterTimerMinutes.text.isNotEmpty()) {
                 val ms = binding.enterTimerMinutes.text.toString().toInt() * 1000L
                 timers.add(Timer(nextId++, ms, ms, 0L, ms, false, false))
+                Log.e("AAA", "43 . currentTime $ms")
                 timerAdapter.submitList(timers.toList())
             } else {
                 Toast.makeText(this, "Input minutes count", Toast.LENGTH_SHORT).show()
@@ -55,14 +56,16 @@ class MainActivity : AppCompatActivity(), TimerListener, LifecycleObserver {
         // Stop previous timer
         if (previousTimerId >= 0 && timers.size > 1 && previousTimerId != position) {
             timers[previousTimerId].stopTime = timers[previousTimerId].currentTime
+            Log.e("AAA", "59 . currentTime ${timers[previousTimerId].currentTime}")
             stop(timers[previousTimerId].id, timers[previousTimerId].currentTime)
         }
         previousTimerId = position
     }
 
     override fun stop(id: Int, currentTime: Long) {
-        // java.lang.ArrayIndexOutOfBoundsException: length=10; index=-1
+        
         timers[previousTimerId].stopTime = currentTime
+        Log.e("AAA", "68 . currentTime $currentTime")
         changeStopwatch(id, currentTime, false)
 
         if (workingTimer != null) {
@@ -86,10 +89,12 @@ class MainActivity : AppCompatActivity(), TimerListener, LifecycleObserver {
 
     override fun saveState(id: Int, position: Int, currentTime: Long) {
         workingTimer?.currentTime = currentTime
+        Log.e("AAA", "92 . currentTime $currentTime")
     }
 
     private fun changeStopwatch(id: Int, currentTime: Long?, isStarted: Boolean) {
         val newTimers = mutableListOf<Timer>()
+        Log.e("AAA", "97 . currentTime $currentTime")
         timers.forEach {
             if (it.id == id) {
                 newTimers.add(
@@ -131,6 +136,7 @@ class MainActivity : AppCompatActivity(), TimerListener, LifecycleObserver {
             val startIntent = Intent(this, ForegroundService::class.java)
             startIntent.putExtra(COMMAND_ID, COMMAND_START)
             startIntent.putExtra(STARTED_TIMER_TIME_MS, workingTimer!!.currentTime)
+            Log.e("AAA", "139 . currentTime ${workingTimer!!.currentTime}")
             startService(startIntent)
         }
 
