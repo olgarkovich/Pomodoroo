@@ -2,7 +2,6 @@ package com.example.pomodoro
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -39,9 +38,8 @@ class MainActivity : AppCompatActivity(), TimerListener, LifecycleObserver {
 
         binding.addNewTimerButton.setOnClickListener {
             if (binding.enterTimerMinutes.text.isNotEmpty()) {
-                val ms = binding.enterTimerMinutes.text.toString().toInt() * 1000L
-                timers.add(Timer(nextId++, ms, ms, 0L, ms, false, false))
-                Log.e("AAA", "43 . currentTime $ms")
+                val ms = binding.enterTimerMinutes.text.toString().toInt() * 1000L * 60L
+                timers.add(Timer(nextId++, ms, ms,  ms, false, false))
                 timerAdapter.submitList(timers.toList())
             } else {
                 Toast.makeText(this, "Input minutes count", Toast.LENGTH_SHORT).show()
@@ -53,19 +51,16 @@ class MainActivity : AppCompatActivity(), TimerListener, LifecycleObserver {
         workingTimer = timers[position]
         changeStopwatch(id, timers[position].stopTime, true)
 
-        // Stop previous timer
         if (previousTimerId >= 0 && timers.size > 1 && previousTimerId != position) {
             timers[previousTimerId].stopTime = timers[previousTimerId].currentTime
-            Log.e("AAA", "59 . currentTime ${timers[previousTimerId].currentTime}")
             stop(timers[previousTimerId].id, timers[previousTimerId].currentTime)
         }
         previousTimerId = position
     }
 
     override fun stop(id: Int, currentTime: Long) {
-        
+
         timers[previousTimerId].stopTime = currentTime
-        Log.e("AAA", "68 . currentTime $currentTime")
         changeStopwatch(id, currentTime, false)
 
         if (workingTimer != null) {
@@ -87,14 +82,12 @@ class MainActivity : AppCompatActivity(), TimerListener, LifecycleObserver {
         }
     }
 
-    override fun saveState(id: Int, position: Int, currentTime: Long) {
+    override fun saveTimerState(id: Int, currentTime: Long) {
         workingTimer?.currentTime = currentTime
-        Log.e("AAA", "92 . currentTime $currentTime")
     }
 
     private fun changeStopwatch(id: Int, currentTime: Long?, isStarted: Boolean) {
         val newTimers = mutableListOf<Timer>()
-        Log.e("AAA", "97 . currentTime $currentTime")
         timers.forEach {
             if (it.id == id) {
                 newTimers.add(
@@ -102,7 +95,6 @@ class MainActivity : AppCompatActivity(), TimerListener, LifecycleObserver {
                         it.id,
                         it.fullTime,
                         currentTime ?: it.currentTime,
-                        it.currentSecond,
                         it.stopTime,
                         isStarted,
                         it.isFinished
@@ -117,14 +109,7 @@ class MainActivity : AppCompatActivity(), TimerListener, LifecycleObserver {
         timers.addAll(newTimers)
     }
 
-    override fun onStop() {
-        super.onStop()
-
-    }
-
     private fun checkCurrentTimer(id: Int) {
-
-        //Make less currentTimerId because delete item which before it in list
         if (id <= previousTimerId) {
             previousTimerId--
         }
@@ -136,7 +121,6 @@ class MainActivity : AppCompatActivity(), TimerListener, LifecycleObserver {
             val startIntent = Intent(this, ForegroundService::class.java)
             startIntent.putExtra(COMMAND_ID, COMMAND_START)
             startIntent.putExtra(STARTED_TIMER_TIME_MS, workingTimer!!.currentTime)
-            Log.e("AAA", "139 . currentTime ${workingTimer!!.currentTime}")
             startService(startIntent)
         }
 

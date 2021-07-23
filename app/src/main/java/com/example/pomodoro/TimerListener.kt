@@ -8,5 +8,5 @@ interface TimerListener {
 
     fun delete(id: Int, position: Int)
 
-    fun saveState(id: Int, position: Int, currentTime: Long)
+    fun saveTimerState(id: Int, currentTime: Long)
 }

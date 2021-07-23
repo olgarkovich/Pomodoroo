@@ -6,7 +6,6 @@ const val COMMAND_START = "COMMAND_START"
 const val COMMAND_STOP = "COMMAND_STOP"
 const val COMMAND_ID = "COMMAND_ID"
 const val STARTED_TIMER_TIME_MS = "STARTED_TIMER_TIME"
-const val NOTIFY_START_TIME = "NOTIFY_START_TIMER"
 
 fun Long.displayTime(): String {
     if (this <= 0L) {

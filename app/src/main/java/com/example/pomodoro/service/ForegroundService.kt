@@ -11,7 +11,6 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.pomodoro.*
-import com.example.pomodoro.R
 import kotlinx.coroutines.*
 
 class ForegroundService : Service() {
